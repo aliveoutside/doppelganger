@@ -36,7 +36,7 @@ def load_chats(path: str) -> Tuple[List[Chat], Tuple[int | None, str | None]]:
             # If chat does not contain name that means we
             # encountered "Deleted Account"
         elif chat["name"]:
-             messages = [
+            messages = [
                     Message(
                         date=msg["date"],
                         author=msg["from"],
