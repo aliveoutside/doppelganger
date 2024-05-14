@@ -27,7 +27,7 @@ def load_chats(path: str) -> Tuple[List[Chat], Tuple[int | None, str | None]]:
     target_id, target_name = None, None
     logger.info(f"Loading chats from '{path}'...")
     with open(path, encoding='utf-8-sig', errors='ignore') as f:
-        for chat in json.load(f, strict=False):
+        chat = json.load(f, strict=False):
             # It means we encountered 'Saved Messages', from which
             # we can extract id and a name of a target person
             if "name" not in chat:
@@ -35,7 +35,7 @@ def load_chats(path: str) -> Tuple[List[Chat], Tuple[int | None, str | None]]:
                 target_name = str(next(msg for msg in chat["messages"] if msg["from_id"] == f"user{target_id}")["from"])
             # If chat does not contain name that means we
             # encountered "Deleted Account"
-            elif chat[0]["name"]:
+            elif chat["name"]:
                 messages = [
                     Message(
                         date=msg["date"],
