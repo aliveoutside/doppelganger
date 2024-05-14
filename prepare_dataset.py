@@ -20,13 +20,23 @@ class Chat(BaseModel):
     messages: List[Message]
     sessions: Optional[List[List[Message]]] = []
 
+class LazyDecoder(json.JSONDecoder):
+    def decode(self, s, **kwargs):
+        regex_replacements = [
+            (re.compile(r'([^\\])\\([^\\])'), r'\1\\\\\2'),
+            (re.compile(r',(\s*])'), r'\1'),
+        ]
+        for regex, replacement in regex_replacements:
+            s = regex.sub(replacement, s)
+        return super().decode(s, **kwargs)
+
 
 def load_chats(path: str) -> Tuple[List[Chat], Tuple[int | None, str | None]]:
     chats: List[Chat] = []
     target_id, target_name = None, None
     logger.info(f"Loading chats from '{path}'...")
     with open(path, encoding='utf-8', errors='ignore') as f:
-        for chat in json.load(f):
+        for chat in json.load(f, cls=LazyDecoder):
             # It means we encountered 'Saved Messages', from which
             # we can extract id and a name of a target person
             if "name" not in chat:
