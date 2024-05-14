@@ -25,7 +25,7 @@ def load_chats(path: str) -> Tuple[List[Chat], Tuple[int | None, str | None]]:
     chats: List[Chat] = []
     target_id, target_name = None, None
     logger.info(f"Loading chats from '{path}'...")
-    with open(path, encoding='utf-8') as f:
+    with open(path, encoding='utf-8', errors='ignore') as f:
         for chat in json.load(f):
             # It means we encountered 'Saved Messages', from which
             # we can extract id and a name of a target person
