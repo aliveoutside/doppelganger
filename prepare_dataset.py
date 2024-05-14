@@ -35,7 +35,7 @@ def load_chats(path: str) -> Tuple[List[Chat], Tuple[int | None, str | None]]:
                 target_name = str(next(msg for msg in chat["messages"] if msg["from_id"] == f"user{target_id}")["from"])
             # If chat does not contain name that means we
             # encountered "Deleted Account"
-            elif chat["name"]:
+            elif chat[0]["name"]:
                 messages = [
                     Message(
                         date=msg["date"],
