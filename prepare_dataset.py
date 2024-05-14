@@ -27,16 +27,16 @@ def load_chats(path: str) -> Tuple[List[Chat], Tuple[int | None, str | None]]:
     target_id, target_name = None, None
     logger.info(f"Loading chats from '{path}'...")
     with open(path, encoding='utf-8-sig', errors='ignore') as f:
-        chat = json.load(f, strict=False):
+        chat = json.load(f, strict=False)
             # It means we encountered 'Saved Messages', from which
             # we can extract id and a name of a target person
-            if "name" not in chat:
-                target_id = int(chat["id"])
-                target_name = str(next(msg for msg in chat["messages"] if msg["from_id"] == f"user{target_id}")["from"])
+        if "name" not in chat:
+            target_id = int(chat["id"])
+            target_name = str(next(msg for msg in chat["messages"] if msg["from_id"] == f"user{target_id}")["from"])
             # If chat does not contain name that means we
             # encountered "Deleted Account"
-            elif chat["name"]:
-                messages = [
+        elif chat["name"]:
+             messages = [
                     Message(
                         date=msg["date"],
                         author=msg["from"],
@@ -46,9 +46,9 @@ def load_chats(path: str) -> Tuple[List[Chat], Tuple[int | None, str | None]]:
                     for msg in chat["messages"]
                     if "from" in msg and msg["from"] and (msg["text_entities"] or "sticker_emoji" in msg)
                 ]
-                if messages:
-                    chat = Chat(name=chat["name"], type=chat["type"], messages=messages)
-                    chats.append(chat)
+            if messages:
+                chat = Chat(name=chat["name"], type=chat["type"], messages=messages)
+                chats.append(chat)
     logger.info(f"Found {len(chats)} chats in file '{path}'")
     if not target_name:
         logger.warning(f"Was not able to detect target name from 'Saved Messages'!")
